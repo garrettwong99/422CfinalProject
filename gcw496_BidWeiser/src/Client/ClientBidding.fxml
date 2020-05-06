@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.ClientBiddingController">
+   <children>
+      <Label fx:id="UserName" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="381.0" layoutY="23.0" prefHeight="26.0" prefWidth="128.0" text="UserName" textAlignment="CENTER" />
+      <Button layoutX="516.0" layoutY="23.0" mnemonicParsing="false" text="Logout" />
+      <Text fill="#3301fc" layoutX="14.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BIDWEISER" wrappingWidth="263.7294921875">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Text>
+      <Text fill="#e80505" layoutX="117.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="World's Largest Bidding Site">
+         <font>
+            <Font name="System Bold" size="11.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

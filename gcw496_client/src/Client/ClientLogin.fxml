@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.ClientLoginController">
+   <children>
+      <Button
+              layoutX="269.0" layoutY="187.0" mnemonicParsing="false"
+              onAction="#SwitchScene"
+              text="Login"
+              fx:id="Login"
+      />
+   </children>
+</AnchorPane>

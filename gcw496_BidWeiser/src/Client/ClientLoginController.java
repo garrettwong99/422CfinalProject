@@ -26,7 +26,7 @@ public class ClientLoginController implements Initializable{
             ClientBiddingController controller2 = loader.getController();
             controller2.setUserName(name);
             Client.setUserName(name);
-            Client.sendtoServer(name);
+            //Client.sendtoServer(name);
             Scene clientBiddingScene = new Scene(clientBiddingParent);
             Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
             window.setScene(clientBiddingScene);

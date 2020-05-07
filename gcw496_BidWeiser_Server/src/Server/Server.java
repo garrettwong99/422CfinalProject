@@ -8,10 +8,7 @@ package Server;
  * See the starter code for the Chat Program on Canvas.  
  * This code does not compile.
  */
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Observable;
@@ -43,28 +40,31 @@ public class Server extends Observable {
     }
 
     class ClientHandler implements Runnable {
-        private  BufferedReader reader;
-        private  ClientObserver writer; // See Canvas. Extends ObjectOutputStream, implements Observer
+        private  ObjectInputStream reader;
+        private ObjectOutputStream writer; // See Canvas. Extends ObjectOutputStream, implements Observer
         Socket clientSocket;
 
         public ClientHandler(Socket clientSocket, ClientObserver writer) {
             Socket sock = clientSocket;
             try {
-                reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+                reader = new ObjectInputStream(sock.getInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         public void run() {
-            String message;
+            Object message;
+            System.out.println("notify Obser");
+            notifyObservers("This is a test");
+            System.out.println("notify Obser");
             try {
-                while ((message = reader.readLine()) != null) {
-                    System.out.println("server read "+ message);
+                while ((message = reader.readObject()) != null) {
+                    System.out.println(message.toString());
                     setChanged();
                     notifyObservers(message);
                 }
-            } catch (IOException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }

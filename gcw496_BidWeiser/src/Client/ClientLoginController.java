@@ -24,9 +24,12 @@ public class ClientLoginController implements Initializable{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ClientBidding.fxml"));
             Parent clientBiddingParent = loader.load();
             ClientBiddingController controller2 = loader.getController();
+
             controller2.setUserName(name);
             Client.setUserName(name);
-            //Client.sendtoServer(name);
+            BidCaller bc = new BidCaller(name);
+            Client.sendtoServer(bc);
+
             Scene clientBiddingScene = new Scene(clientBiddingParent);
             Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
             window.setScene(clientBiddingScene);

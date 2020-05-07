@@ -13,19 +13,25 @@ import java.io.IOException;
 
 public class Client extends Application {
     ClientLoginController controller;
-    ObjectOutputStream toServer = null;
-    ObjectInputStream fromServer = null;
+    static ObjectOutputStream toServer = null;
+    static ObjectInputStream fromServer = null;
 
     static private String userName;
 
     public static void setUserName(String name) {
         userName = name;
     }
-/*
-    public static void sendtoServer(Object message) throws IOException {
-        toServer.writeObject(message);
+
+    public static void sendtoServer(Object message){
+        try {
+            System.out.println("sent");
+            toServer.writeObject(message);
+        } catch (IOException e) {
+            System.out.println("Did not send");
+        }
+        //toServer.close();
     }
-*/
+
 
     @Override
     public void start(Stage stage) throws Exception{
@@ -47,11 +53,8 @@ public class Client extends Application {
         try{
             Socket sock = new Socket("localhost", port);
             System.out.println("hello world");
+            toServer = new ObjectOutputStream((sock.getOutputStream()));
             fromServer = new ObjectInputStream(sock.getInputStream());
-            //toServer = new ObjectOutputStream(new PrintStream(sock.getOutputStream()));
-            //toServer.flush();
-
-
             System.out.println("networking established");
             Thread readerThread = new Thread(new IncomingReader());
             readerThread.start();
@@ -60,23 +63,12 @@ public class Client extends Application {
         }
     }
 
-    class IncomingReader implements Runnable
-        ObjectOutputStream toServer;
-        ObjectInputStream fromServer;
-        public IncomingReader(Socket sock){
-            try {
-                toServer = new ObjectOutputStream(sock.getOutputStream());
-                //fromServer = new ObjectInputStream(sock.getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
+    class IncomingReader implements Runnable{
         public void run() {
             Object message;
             try {
                 while ((message = fromServer.readObject()) != null) {
-                    //System.out.println(message.toString());
+                    System.out.println(message.toString());
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();

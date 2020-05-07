@@ -9,4 +9,5 @@ public class AuctionItems {
     private String itemName;
     private int  highestBid;
     private String highestBidder;
+    private int Time;
 }

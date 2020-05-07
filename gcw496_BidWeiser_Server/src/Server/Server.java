@@ -41,32 +41,37 @@ public class Server extends Observable {
 
     class ClientHandler implements Runnable {
         private  ObjectInputStream reader;
-        private ObjectOutputStream writer; // See Canvas. Extends ObjectOutputStream, implements Observer
+        private ClientObserver writer; // See Canvas. Extends ObjectOutputStream, implements Observer
         Socket clientSocket;
 
         public ClientHandler(Socket clientSocket, ClientObserver writer) {
             Socket sock = clientSocket;
+            this.writer = writer;
             try {
-                reader = new ObjectInputStream(sock.getInputStream());
+                InputStream is = sock.getInputStream();
+                reader = new ObjectInputStream(is);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         public void run() {
-            Object message;
-            System.out.println("notify Obser");
-            notifyObservers("This is a test");
-            System.out.println("notify Obser");
-            try {
-                while ((message = reader.readObject()) != null) {
-                    System.out.println(message.toString());
-                    setChanged();
-                    notifyObservers(message);
+            BidCaller bc;
+                try {
+                    while (true){
+                        bc = (BidCaller)reader.readObject();
+                        if(bc != null){
+                            System.out.print("recieved");
+                            System.out.println(bc.getUserName());
+                            setChanged();
+                            notifyObservers(bc);
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+
+
         }
     } // end of class ClientHandler
 }

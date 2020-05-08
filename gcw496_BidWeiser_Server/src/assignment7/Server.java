@@ -1,4 +1,4 @@
-package Server;
+package assignment7;
 
 /*
  * Author: Vallath Nandakumar and the EE 422C instructors.
@@ -8,6 +8,7 @@ package Server;
  * See the starter code for the Chat Program on Canvas.  
  * This code does not compile.
  */
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -20,8 +21,29 @@ public class Server extends Observable {
     static Server server;
     public static void main (String [] args) {
         server = new Server();
-        //server.populateItems(); load up the files
+        server.populateItems();
         server.SetupNetworking();
+    }
+    /*
+     * This method will take a csv file with Auction items
+     * descriptions and the time limit, it will copy the
+     * contents into Items ArrayList<AuctionItems>
+     */
+    private void populateItems() {
+        try {
+            Scanner s = new Scanner(new File("./src/AuctionList"));
+            String p;
+            String [] pack;
+            AuctionItems a;
+            while(s.hasNextLine()){
+                p = s.nextLine();
+                pack = p.split(",");
+                a = new AuctionItems(pack[0],pack[1],Integer.parseInt(pack[2]));
+                AuctionItems.addItem(a);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File Not Found. Need to Debug");
+        }
     }
 
     private void SetupNetworking() {
@@ -56,15 +78,26 @@ public class Server extends Observable {
         }
 
         public void run() {
+            Object o;
             BidCaller bc;
                 try {
                     while (true){
-                        bc = (BidCaller)reader.readObject();
-                        if(bc != null){
-                            System.out.print("recieved");
-                            System.out.println(bc.getUserName());
-                            setChanged();
-                            notifyObservers(bc);
+                        o = reader.readObject();
+                        if(o != null){
+                            if(o instanceof Bid){
+                                System.out.println("integer detected");
+                            }
+                            if(o instanceof BidCaller){
+                                System.out.println("BidCaller detected");
+                                bc = (BidCaller)o;
+                                System.out.println(bc.getUserName());
+                                BidCaller.addClient(bc);
+                                for(int i = 0; i < AuctionItems.getItemSize(); i++){
+                                    setChanged();
+                                    writer.reset();
+                                    notifyObservers(AuctionItems.getItem(i));
+                                }
+                            }
                         }
                     }
                 } catch (IOException | ClassNotFoundException e) {

@@ -1,7 +1,6 @@
 
-package Client;
+package assignment7;
 
-import com.sun.org.apache.xml.internal.dtm.ref.sax2dtm.SAX2DTM2;
 import javafx.event.ActionEvent;
 import javafx.fxml.*;
 import javafx.scene.*;
@@ -21,18 +20,13 @@ public class ClientLoginController implements Initializable{
             setUserName.setText("please enter in a valid username");
         else{
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ClientBidding.fxml"));
-            Parent clientBiddingParent = loader.load();
-            ClientBiddingController controller2 = loader.getController();
-            controller2.setUserName(name);
+            Client.controller2.setUserName(name);
             Client.setUserName(name);
-            //Client.sendtoServer(name);
-            Scene clientBiddingScene = new Scene(clientBiddingParent);
+            BidCaller bc = new BidCaller(name);
+            Client.sendToServer(bc);
             Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-            window.setScene(clientBiddingScene);
+            window.setScene(Client.scene2);
             window.show();
-
-
         }
     }
 

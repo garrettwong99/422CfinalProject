@@ -50,8 +50,9 @@
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Time Remaining" GridPane.rowIndex="1" />
                   <Label fx:id="TimeRemainingf" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="New Bid" GridPane.rowIndex="2" />
-                  <Button fx:id="BIDf" mnemonicParsing="false" prefHeight="26.0" prefWidth="141.0" text="BID" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Button fx:id="BIDf" mnemonicParsing="false" onAction="#newBid" prefHeight="26.0" prefWidth="141.0" text="BID" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <TextField fx:id="NewBidf" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label fx:id="errormessagef" prefHeight="16.0" prefWidth="129.0" textFill="#f20000" GridPane.rowIndex="3" />
                </children>
             </GridPane>
          </children>
@@ -61,7 +62,7 @@
       <HBox layoutX="309.0" layoutY="23.0" prefHeight="26.0" prefWidth="284.0" spacing="10.0">
          <children>
             <Label fx:id="UserName" contentDisplay="RIGHT" prefHeight="26.0" prefWidth="128.0" text="UserName" textAlignment="CENTER" />
-            <Button fx:id="History" mnemonicParsing="false" text="History" />
+            <Button mnemonicParsing="false" text="History" />
             <Button fx:id="LogOut" mnemonicParsing="false" onAction="#SwitchScene" text="Logout" />
          </children>
       </HBox>

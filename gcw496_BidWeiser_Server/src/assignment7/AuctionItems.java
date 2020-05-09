@@ -8,8 +8,10 @@ import java.io.Serializable;
 
 public class AuctionItems implements Serializable{
     private static final long serialVersionUID = 12345;
-    private static List<AuctionItems> Items = new ArrayList<AuctionItems>();
+    //private static HashMap<Integer,AuctionItems> ItemMap = new HashMap<Integer, AuctionItems>();
+        private static List<AuctionItems> Items = new ArrayList<AuctionItems>();
 
+    private int itemNumber;
     private String itemName;
     private String itemDescription;
     private int  highestBid;
@@ -17,7 +19,8 @@ public class AuctionItems implements Serializable{
     private boolean sold;
     private BidCaller bidcaller;
 
-    public AuctionItems(String n, String d, int t){
+    public AuctionItems(String n, String d, int t, int intemNumb){
+        this.itemNumber = intemNumb;
         this.itemName = n;
         this.itemDescription = d;
         this.highestBid = 0;
@@ -46,6 +49,29 @@ public class AuctionItems implements Serializable{
         }
     }
 
+    public static void updateItem(Bid b){
+        for(AuctionItems i :Items){
+            if(i.getItemName().equals(b.getItem().getItemName())){
+                i.highestBid = b.getNewBid();
+            }
+        }
+    }
+
+    public static void decrimentTime(){
+        for(AuctionItems a : Items){
+            int time = a.getTime();
+            time--;
+            a.setTime(time);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return itemName;
+    }
+    public int getItemNumber(){
+        return itemNumber;
+    }
     public String getItemName() {
         return itemName;
     }
@@ -80,5 +106,11 @@ public class AuctionItems implements Serializable{
 
     public void setBidcaller(BidCaller bidcaller) {
         this.bidcaller = bidcaller;
+    }
+    public void setHighestBid(int highestBid) {
+        this.highestBid = highestBid;
+    }
+    public void setTime(int time) {
+        this.time = time;
     }
 }

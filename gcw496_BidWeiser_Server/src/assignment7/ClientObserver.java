@@ -14,6 +14,7 @@ public class ClientObserver extends ObjectOutputStream implements Observer {
     public void update(Observable o, Object arg) {
         try {
             this.reset(); //writer.flush();
+            this.flush();
             writeObject(arg);
         } catch (IOException e) {
             e.printStackTrace();

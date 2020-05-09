@@ -17,12 +17,27 @@ import java.util.*;
 
 
 public class Server extends Observable {
-    private static List<String> users = new ArrayList<String>();
     static Server server;
+    static boolean needsUpdate = false;
+
+    static class TimerforItems extends TimerTask{
+        @Override
+        public void run() {
+            System.out.println("time");
+            AuctionItems.decrimentTime();
+            Server.needsUpdate = true;
+        }
+    }
     public static void main (String [] args) {
+
+        TimerforItems itemTimer = new TimerforItems();
+        Timer t = new Timer();
+        t.schedule(itemTimer,10000,1000);
         server = new Server();
         server.populateItems();
         server.SetupNetworking();
+
+
     }
     /*
      * This method will take a csv file with Auction items
@@ -35,11 +50,13 @@ public class Server extends Observable {
             String p;
             String [] pack;
             AuctionItems a;
+            int startnum = 0;
             while(s.hasNextLine()){
                 p = s.nextLine();
                 pack = p.split(",");
-                a = new AuctionItems(pack[0],pack[1],Integer.parseInt(pack[2]));
+                a = new AuctionItems(pack[0],pack[1],Integer.parseInt(pack[2]),startnum);
                 AuctionItems.addItem(a);
+                startnum++;
             }
         } catch (FileNotFoundException e) {
             System.out.println("File Not Found. Need to Debug");
@@ -60,6 +77,8 @@ public class Server extends Observable {
             }
         } catch (IOException e) {}
     }
+
+
 
     class ClientHandler implements Runnable {
         private  ObjectInputStream reader;
@@ -84,8 +103,24 @@ public class Server extends Observable {
                     while (true){
                         o = reader.readObject();
                         if(o != null){
+                            if(o instanceof String){
+                                for(int i = 0; i < AuctionItems.getItemSize(); i++){
+                                    setChanged();
+                                    writer.reset();
+                                    notifyObservers(AuctionItems.getItem(i));
+                                }
+                            }
                             if(o instanceof Bid){
-                                System.out.println("integer detected");
+                                System.out.println("Bid detected");
+                                Bid b = (Bid)o;
+                                System.out.println(b.getItem().getItemName());
+                                System.out.println(b.getNewBid());
+                                AuctionItems.updateItem((Bid)o);
+                                for(int i = 0; i < AuctionItems.getItemSize(); i++){
+                                    setChanged();
+                                    writer.reset();
+                                    notifyObservers(AuctionItems.getItem(i));
+                                }
                             }
                             if(o instanceof BidCaller){
                                 System.out.println("BidCaller detected");
@@ -100,7 +135,8 @@ public class Server extends Observable {
                             }
                         }
                     }
-                } catch (IOException | ClassNotFoundException e) {
+                }
+                catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
 

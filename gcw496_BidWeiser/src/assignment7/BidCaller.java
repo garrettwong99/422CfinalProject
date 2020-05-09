@@ -1,3 +1,4 @@
+
 package assignment7;
 
 import java.io.Serializable;
@@ -21,3 +22,4 @@ public class BidCaller implements Serializable{
 
 
 }
+

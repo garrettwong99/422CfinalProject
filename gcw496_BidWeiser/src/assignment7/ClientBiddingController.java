@@ -65,7 +65,6 @@ public class ClientBiddingController implements Initializable {
 
     public void updateGUI(){
         if(hasSelectedItem){
-            System.out.println("updating");
             if(Client.bidCaller.getboughtItems().contains(currentTabItem)){
                 ItemWonf.setText("This item is yours!");
             }

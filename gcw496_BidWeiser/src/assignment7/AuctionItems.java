@@ -1,5 +1,13 @@
 package assignment7;
-
+// Copy-paste this file at the top of every file you turn in.
+/*
+ * EE422C Final Project submission by
+ * Replace <...> with your actual data.
+ * <Garrett Wong>
+ * <gcw496>
+ * <16295>
+ * Spring 2020
+ */
 import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
@@ -7,6 +15,7 @@ import java.io.Serializable;
 
 public class AuctionItems implements Serializable{
     private static final long serialVersionUID = 12345;
+    //private static HashMap<Integer,AuctionItems> ItemMap = new HashMap<Integer, AuctionItems>();
     private static List<AuctionItems> Items = new ArrayList<AuctionItems>();
 
     private int itemNumber;
@@ -14,9 +23,6 @@ public class AuctionItems implements Serializable{
     private String itemDescription;
     private int  highestBid;
     private int time;
-
-
-
     private int minPrice;
     private boolean sold;
     private BidCaller bidcaller;

@@ -1,13 +1,22 @@
 package assignment7;
 
+// Copy-paste this file at the top of every file you turn in.
+/*
+ * EE422C Final Project submission by
+ * Replace <...> with your actual data.
+ * <Garrett Wong>
+ * <gcw496>
+ * <16295>
+ * Spring 2020
+ */
+
 import java.io.Serializable;
 
 public class Bid implements Serializable {
     private static final long serialVersionUID = 123;
+    private BidCaller bidCaller;
     private AuctionItems Item;
     private int newBid;
-    private BidCaller bidCaller;
-
 
     public Bid(AuctionItems i, int newBid, BidCaller b){
         this.Item = i;
@@ -35,5 +44,5 @@ public class Bid implements Serializable {
     public BidCaller getBidCaller(){
         return bidCaller;
     }
-
 }
+

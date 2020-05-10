@@ -1,4 +1,13 @@
 package assignment7;
+// Copy-paste this file at the top of every file you turn in.
+/*
+ * EE422C Final Project submission by
+ * Replace <...> with your actual data.
+ * <Garrett Wong>
+ * <gcw496>
+ * <16295>
+ * Spring 2020
+ */
 
 /*
  * Author: Vallath Nandakumar and the EE 422C instructors.
@@ -152,7 +161,8 @@ public class Server extends Observable {
                     }
                 }
                 catch (IOException | ClassNotFoundException e) {
-                    //remove observable
+                    System.out.println("Client removed");
+                    deleteObserver(writer);
                 }
         }
     } // end of class ClientHandler

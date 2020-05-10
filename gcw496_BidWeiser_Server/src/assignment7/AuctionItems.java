@@ -1,7 +1,14 @@
 package assignment7;
-
+// Copy-paste this file at the top of every file you turn in.
+/*
+ * EE422C Final Project submission by
+ * Replace <...> with your actual data.
+ * <Garrett Wong>
+ * <gcw496>
+ * <16295>
+ * Spring 2020
+ */
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.io.Serializable;
 

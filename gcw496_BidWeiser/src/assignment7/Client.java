@@ -1,5 +1,13 @@
 package assignment7;
-
+// Copy-paste this file at the top of every file you turn in.
+/*
+ * EE422C Final Project submission by
+ * Replace <...> with your actual data.
+ * <Garrett Wong>
+ * <gcw496>
+ * <16295>
+ * Spring 2020
+ */
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -52,9 +60,8 @@ public class Client extends Application {
         try {
             toServer.reset();
             toServer.writeUnshared(message);
-            //toServer.flush();
+            toServer.flush();
         } catch (IOException e) {
-            System.out.println("Did not send");
         }
         //toServer.close();
     } // end of sendTOServer
@@ -163,6 +170,11 @@ public class Client extends Application {
                 System.out.println("socket closed");
             }catch (IOException ex) {
                 System.out.println("server closed");
+                try {
+                    Client.exit();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
 

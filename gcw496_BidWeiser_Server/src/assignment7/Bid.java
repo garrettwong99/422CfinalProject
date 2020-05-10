@@ -1,5 +1,15 @@
 package assignment7;
 
+// Copy-paste this file at the top of every file you turn in.
+/*
+ * EE422C Final Project submission by
+ * Replace <...> with your actual data.
+ * <Garrett Wong>
+ * <gcw496>
+ * <16295>
+ * Spring 2020
+ */
+
 import java.io.Serializable;
 
 public class Bid implements Serializable {

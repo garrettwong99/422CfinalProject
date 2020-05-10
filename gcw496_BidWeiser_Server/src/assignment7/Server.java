@@ -23,7 +23,6 @@ public class Server extends Observable {
     static class TimerforItems extends TimerTask{
         @Override
         public void run() {
-            System.out.println("time");
             AuctionItems.decrimentTime();
             Server.needsUpdate = true;
         }
@@ -54,7 +53,7 @@ public class Server extends Observable {
             while(s.hasNextLine()){
                 p = s.nextLine();
                 pack = p.split(",");
-                a = new AuctionItems(pack[0],pack[1],Integer.parseInt(pack[2]),startnum);
+                a = new AuctionItems(pack[0],pack[1],Integer.parseInt(pack[2]),startnum,Integer.parseInt(pack[3]));
                 AuctionItems.addItem(a);
                 startnum++;
             }
@@ -104,10 +103,21 @@ public class Server extends Observable {
                         o = reader.readObject();
                         if(o != null){
                             if(o instanceof String){
-                                for(int i = 0; i < AuctionItems.getItemSize(); i++){
-                                    setChanged();
-                                    writer.reset();
-                                    notifyObservers(AuctionItems.getItem(i));
+                                String s = (String)o;
+                                if(s.equals("request")){
+                                    for(int i = 0; i < AuctionItems.getItemSize(); i++){
+                                        setChanged();
+                                        writer.reset();
+                                        notifyObservers(AuctionItems.getItem(i));
+                                    }
+                                }
+                                else if(s.equals("init")){
+                                    System.out.println("init detected");
+                                    for(BidCaller b: BidCaller.getClients()){
+                                        setChanged();
+                                        writer.reset();
+                                        notifyObservers(b);
+                                    }
                                 }
                             }
                             if(o instanceof Bid){
@@ -127,6 +137,11 @@ public class Server extends Observable {
                                 bc = (BidCaller)o;
                                 System.out.println(bc.getUserName());
                                 BidCaller.addClient(bc);
+                                for(BidCaller b: BidCaller.getClients()){
+                                    setChanged();
+                                    writer.reset();
+                                    notifyObservers(b);
+                                }
                                 for(int i = 0; i < AuctionItems.getItemSize(); i++){
                                     setChanged();
                                     writer.reset();
@@ -137,10 +152,8 @@ public class Server extends Observable {
                     }
                 }
                 catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
+                    //remove observable
                 }
-
-
         }
     } // end of class ClientHandler
 }

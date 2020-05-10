@@ -16,12 +16,14 @@ public class AuctionItems implements Serializable{
     private String itemDescription;
     private int  highestBid;
     private int time;
+    private int minPrice;
     private boolean sold;
     private BidCaller bidcaller;
 
-    public AuctionItems(String n, String d, int t, int intemNumb){
+    public AuctionItems(String n, String d, int t, int intemNumb, int minPrice){
         this.itemNumber = intemNumb;
         this.itemName = n;
+        this.minPrice = minPrice;
         this.itemDescription = d;
         this.highestBid = 0;
         this.time = t;
@@ -45,29 +47,41 @@ public class AuctionItems implements Serializable{
     public static void printItems(){
         for(AuctionItems a : Items){
             System.out.println(a.itemName);
-            //System.out.println(a.itemDescription);
         }
     }
 
     public static void updateItem(Bid b){
         for(AuctionItems i :Items){
-            if(i.getItemName().equals(b.getItem().getItemName())){
+            if(i.getItemNumber() == b.getItem().getItemNumber()){
                 i.highestBid = b.getNewBid();
+                i.bidcaller = b.getBidCaller();
+                System.out.println(i.bidcaller.getUserName());
             }
         }
     }
 
     public static void decrimentTime(){
         for(AuctionItems a : Items){
-            int time = a.getTime();
-            time--;
-            a.setTime(time);
+            if (!a.sold){
+                if (a.getTime()>0){
+                    int time = a.getTime();
+                    time--;
+                    a.setTime(time);
+                }
+                if (a.getTime() == 0){
+                    a.sold = true;
+                    System.out.println(a.getItemName() + " is Sold!");
+                }
+            }
         }
     }
 
     @Override
     public String toString() {
         return itemName;
+    }
+    public int getMinPrice() {
+        return minPrice;
     }
     public int getItemNumber(){
         return itemNumber;

@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.Socket;
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,19 +23,31 @@ public class Client extends Application {
     static Socket sock;
     static Scene scene2;
     static private String userName;
+    static BidCaller bidCaller;
 
+    /*
+     * TimerforItems extends the TimerTask class and calls a request
+     * to the server periodically every second to update the remaining
+     * time for each item.
+     * Each item has a specific timeout time specified in the csv file
+     */
     static class TimerforItems extends TimerTask {
         @Override
         public void run() {
             sendToServer("request");
-            System.out.println("test");
+            //System.out.println("request");
         }
-    }
+    } // end of Timer for items
 
     public static void setUserName(String name) {
         userName = name;
     }
 
+    /*
+     * sendToServer takes any object and sends it to the server
+     * with the Object Output Stream toServer
+     * @params Object message
+     */
     public static void sendToServer(Object message){
         try {
             toServer.reset();
@@ -44,14 +57,27 @@ public class Client extends Application {
             System.out.println("Did not send");
         }
         //toServer.close();
-    }
+    } // end of sendTOServer
 
+    /*
+     closes the Client server connection
+     */
     public static void closeSocket() throws IOException {
         sock.close();
     }
 
+    public static void exit() throws IOException{
+        sock.close();
+        Platform.exit();
+        System.exit(0);
+    }
+
     @Override
     public void start(Stage stage) throws Exception{
+
+
+        setUpNetworking();
+
         FXMLLoader l = new FXMLLoader();
         Parent root = l.load(getClass().getResource("ClientLogin.fxml").openStream());
         controller1 = l.getController();
@@ -59,12 +85,14 @@ public class Client extends Application {
         stage.setScene(scene);
         stage.show();
 
+
+
         FXMLLoader l2 = new FXMLLoader();
         Parent root2 = l2.load(getClass().getResource("ClientBidding.fxml").openStream());
         controller2 = l2.getController();
         scene2 = new Scene(root2);
 
-        setUpNetworking();
+
 
     }
 
@@ -89,12 +117,28 @@ public class Client extends Application {
             Object o;
             try {
                 while ((o = fromServer.readObject()) != null) {
+                    if(o instanceof BidCaller){
+                        BidCaller.addClient((BidCaller)o);
+                        System.out.println("newBidCaller");
+                    }
                     if( o instanceof AuctionItems){
                         AuctionItems b = (AuctionItems)o;
                         for (AuctionItems a : AuctionItems.getAuctionList()){
-                            if (a.getItemNumber() == b.getItemNumber()){                // if item already in list, just update it
+                            // if item already in list, just update it
+                            if (a.getItemNumber() == b.getItemNumber()){
+                                if(a.isSold() && a.getBidcaller()!=null){
+                                    try{
+                                        if (bidCaller.getboughtItems().contains(a)){}
+                                        else if (a.getBidcaller().getUserName().equals(bidCaller.getUserName())){
+                                            bidCaller.addBoughtItem(a);
+                                            System.out.println("I won " + a.getItemName());
+                                        }
+                                    }catch(NullPointerException e){}
+                                }
                                 a.setHighestBid(b.getHighestBid());
+                                a.setBidcaller(b.getBidcaller());
                                 a.setTime(b.getTime());
+                                a.setSold(b.isSold());
                                 Platform.runLater(()->{
                                     controller2.updateGUI();
                                 });
@@ -107,15 +151,20 @@ public class Client extends Application {
                             Platform.runLater(()->{
                                 controller2.populateListView(b);
                             });
-
-                            AuctionItems.printItems();
                             inlist = false;
                         }
                     }
+
                 }
-            } catch (IOException | ClassNotFoundException ex) {
-                ex.printStackTrace();
+            }catch(ClassNotFoundException ex){
+                System.out.println("cant find");
             }
+            catch(SocketException ex){
+                System.out.println("socket closed");
+            }catch (IOException ex) {
+                System.out.println("server closed");
+            }
+
 
         }
     }

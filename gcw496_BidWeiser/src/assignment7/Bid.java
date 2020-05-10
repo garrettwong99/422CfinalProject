@@ -4,6 +4,17 @@ import java.io.Serializable;
 
 public class Bid implements Serializable {
     private static final long serialVersionUID = 123;
+    private AuctionItems Item;
+    private int newBid;
+    private BidCaller bidCaller;
+
+
+    public Bid(AuctionItems i, int newBid, BidCaller b){
+        this.Item = i;
+        this.newBid = newBid;
+        this.bidCaller = b;
+
+    }
 
     public AuctionItems getItem() {
         return Item;
@@ -21,12 +32,8 @@ public class Bid implements Serializable {
         this.newBid = newBid;
     }
 
-    private AuctionItems Item;
-    private int newBid;
-
-    public Bid(AuctionItems i, int newBid){
-        this.Item = i;
-        this.newBid = newBid;
+    public BidCaller getBidCaller(){
+        return bidCaller;
     }
 
 }

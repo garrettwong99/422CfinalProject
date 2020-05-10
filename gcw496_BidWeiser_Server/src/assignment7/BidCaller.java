@@ -14,12 +14,24 @@ public class BidCaller implements Serializable{
     }
 
     private String userName;
+    private int walletamount;
 
     public BidCaller(String n){
         this.userName = n;
     }
     public String getUserName() {
         return userName;
+    }
+
+    public int getWalletamount(){
+        return walletamount;
+    }
+    public void addBoughtItem(AuctionItems a){
+        boughtItems.add(a);
+    }
+
+    public static List<BidCaller> getClients(){
+        return allClients;
     }
 
 

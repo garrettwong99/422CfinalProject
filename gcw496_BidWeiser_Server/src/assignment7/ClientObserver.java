@@ -17,7 +17,8 @@ public class ClientObserver extends ObjectOutputStream implements Observer {
             this.flush();
             writeObject(arg);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("socket closed");
         }
+
     }
 }

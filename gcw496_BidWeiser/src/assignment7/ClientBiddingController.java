@@ -23,18 +23,25 @@ public class ClientBiddingController implements Initializable {
     @FXML private Button LogOut;
 
     @FXML private Label Itemf;
+    @FXML private Label Availabilityf;
+    @FXML private Label ItemWonf;
     @FXML private Label Descriptionf;
+    @FXML private Label CurrentHighestBidderf;
     @FXML private Label CurrentHighestBidf;
+    @FXML private Label minPricef;
     @FXML private Label TimeRemainingf;
     @FXML private Label errormessagef;
     @FXML private TextField NewBidf;
     @FXML private Button BIDf;
+
 
     @FXML private ListView AuctionItemList;
     private static AuctionItems currentTabItem;
     private static boolean hasSelectedItem = false;
 
     public void SwitchScene(ActionEvent event) throws IOException {
+        Client.exit();
+        /*
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ClientLogin.fxml"));
         Parent clinetLoginParent = loader.load();
         ClientLoginController controller2 = loader.getController();
@@ -42,6 +49,7 @@ public class ClientBiddingController implements Initializable {
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(clientLoginScene);
         window.show();
+         */
     }
 
     public void setItemtoBid(){
@@ -57,40 +65,72 @@ public class ClientBiddingController implements Initializable {
 
     public void updateGUI(){
         if(hasSelectedItem){
-            CurrentHighestBidf.setText(String.valueOf(currentTabItem.getHighestBid()));
-            TimeRemainingf.setText(String.valueOf(currentTabItem.getTime()));
+            System.out.println("updating");
+            if(Client.bidCaller.getboughtItems().contains(currentTabItem)){
+                ItemWonf.setText("This item is yours!");
+            }
+            else{
+                ItemWonf.setText("");
+            }
+            if(currentTabItem.isSold()){
+                Availabilityf.setText("This item is no longer available");
+            }
+            else{
+                Availabilityf.setText("This item is still available");
+                CurrentHighestBidf.setText(String.valueOf(currentTabItem.getHighestBid()));
+                TimeRemainingf.setText(String.valueOf(currentTabItem.getTime()));
+                minPricef.setText(String.valueOf(currentTabItem.getMinPrice()));
+                if (currentTabItem.getBidcaller() == null){
+                    CurrentHighestBidderf.setText("No bids");
+                }
+                else{
+                    CurrentHighestBidderf.setText(currentTabItem.getBidcaller().getUserName());
+                }
+            }
         }
-
     }
+
 
     public void newBid(){
         Object o = AuctionItemList.getSelectionModel().getSelectedItem();
         AuctionItems itemWanted = (AuctionItems)o;
         String bidAmountString = NewBidf.getText();
-        try{
-            if(bidAmountString.equals("")){
-                errormessagef.setText("empty amount");
-            }
-            else if(Integer.parseInt(bidAmountString)<itemWanted.getHighestBid()){
-                errormessagef.setText("Too Low");
-            }
-            else{
-                int bidAmount = Integer.parseInt(bidAmountString);
-                System.out.println(bidAmount);
-                Bid b = new Bid(itemWanted,bidAmount);
-                System.out.println(b.getItem().getItemName());
-                System.out.println(b.getNewBid());
-                Client.sendToServer(b);
-                errormessagef.setText("");
-            }
-        } catch (NumberFormatException e) {
-            errormessagef.setText("Not an amount");
+        if(itemWanted.isSold()){
+            errormessagef.setText("Bid Closed");
         }
-        catch (NullPointerException e) {
-            errormessagef.setText("Select item");
+        else {
+            try {
+                if (bidAmountString.equals("")) {
+                    errormessagef.setText("empty amount");
+                } else if (Integer.parseInt(bidAmountString) < itemWanted.getMinPrice()) {
+                    errormessagef.setText("min price = $" + String.valueOf(itemWanted.getMinPrice()));
+                } else if (Integer.parseInt(bidAmountString) <= itemWanted.getHighestBid()) {
+                    errormessagef.setText("Too Low");
+                } else {
+                    int bidAmount = Integer.parseInt(bidAmountString);
+                    System.out.println(bidAmount);
+                    Bid b = new Bid(itemWanted, bidAmount, Client.bidCaller);
+                    System.out.println(b.getItem().getItemName());
+                    System.out.println(b.getNewBid());
+                    Client.sendToServer(b);
+                    errormessagef.setText("");
+                }
+            } catch (NumberFormatException e) {
+                errormessagef.setText("Not an amount");
+            } catch (NullPointerException e) {
+                errormessagef.setText("Select item");
+            }
         }
-
-
+    }
+    public void changeToHistory(ActionEvent event) throws IOException {
+        //AuctionItems.getAuctionList().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ClientHistory.fxml"));
+        Parent ClientHistoryParent = loader.load();
+        ClientHistoryController controller = loader.getController();
+        Scene historyscene = new Scene(ClientHistoryParent);
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        window.setScene(historyscene);
+        window.show();
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {

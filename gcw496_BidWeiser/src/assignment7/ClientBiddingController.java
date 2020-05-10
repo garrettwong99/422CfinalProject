@@ -1,5 +1,13 @@
 package assignment7;
-
+// Copy-paste this file at the top of every file you turn in.
+/*
+ * EE422C Final Project submission by
+ * Replace <...> with your actual data.
+ * <Garrett Wong>
+ * <gcw496>
+ * <16295>
+ * Spring 2020
+ */
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,7 +29,6 @@ public class ClientBiddingController implements Initializable {
     @FXML private Label UserName;
     @FXML private Button History;
     @FXML private Button LogOut;
-
     @FXML private Label Itemf;
     @FXML private Label Availabilityf;
     @FXML private Label ItemWonf;
@@ -39,6 +46,10 @@ public class ClientBiddingController implements Initializable {
     private static AuctionItems currentTabItem;
     private static boolean hasSelectedItem = false;
 
+    /*
+     * This is linked to the button @ FXML logout . Original brings you back to login
+     * now it exits gracefully
+     */
     public void SwitchScene(ActionEvent event) throws IOException {
         Client.exit();
         /*
@@ -52,6 +63,10 @@ public class ClientBiddingController implements Initializable {
          */
     }
 
+    /*
+     * THis is linked to the TexField @ FXML NewBidf
+     * this takes the the item selected, and brings the info up for the client
+     */
     public void setItemtoBid(){
         Object o = AuctionItemList.getSelectionModel().getSelectedItem();
         AuctionItems item = (AuctionItems)o;
@@ -63,6 +78,10 @@ public class ClientBiddingController implements Initializable {
         TimeRemainingf.setText(String.valueOf(item.getTime()));
     }
 
+    /*
+     * updates the GUI from the item selected
+     * updates every second as the clock counts down
+     */
     public void updateGUI(){
         if(hasSelectedItem){
             if(Client.bidCaller.getboughtItems().contains(currentTabItem)){
@@ -76,20 +95,23 @@ public class ClientBiddingController implements Initializable {
             }
             else{
                 Availabilityf.setText("This item is still available");
-                CurrentHighestBidf.setText(String.valueOf(currentTabItem.getHighestBid()));
-                TimeRemainingf.setText(String.valueOf(currentTabItem.getTime()));
-                minPricef.setText(String.valueOf(currentTabItem.getMinPrice()));
-                if (currentTabItem.getBidcaller() == null){
-                    CurrentHighestBidderf.setText("No bids");
-                }
-                else{
-                    CurrentHighestBidderf.setText(currentTabItem.getBidcaller().getUserName());
-                }
+            }
+            CurrentHighestBidf.setText(String.valueOf(currentTabItem.getHighestBid()));
+            TimeRemainingf.setText(String.valueOf(currentTabItem.getTime()));
+            minPricef.setText(String.valueOf(currentTabItem.getMinPrice()));
+            if (currentTabItem.getBidcaller() == null){
+                CurrentHighestBidderf.setText("No bids");
+            }
+            else{
+                CurrentHighestBidderf.setText(currentTabItem.getBidcaller().getUserName());
             }
         }
     }
 
-
+    /*
+     * Linked to @FXML Bidf
+     * sets error message for invalid bids and sends valid bids to the server
+     */
     public void newBid(){
         Object o = AuctionItemList.getSelectionModel().getSelectedItem();
         AuctionItems itemWanted = (AuctionItems)o;
@@ -121,8 +143,11 @@ public class ClientBiddingController implements Initializable {
             }
         }
     }
+
+    /*
+     * Linked to @FXML history takes you to a separate screen with the client's purchase history
+     */
     public void changeToHistory(ActionEvent event) throws IOException {
-        //AuctionItems.getAuctionList().clear();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ClientHistory.fxml"));
         Parent ClientHistoryParent = loader.load();
         ClientHistoryController controller = loader.getController();
@@ -133,12 +158,18 @@ public class ClientBiddingController implements Initializable {
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
     }
 
+    /*
+     * populate the ListVIew
+     */
     public void populateListView(AuctionItems a){
         AuctionItemList.getItems().add(a);
     }
+
+    /*
+     * setes the username
+     */
     public void setUserName(String text){
         UserName.setText(text);
     }

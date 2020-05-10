@@ -47,6 +47,9 @@ public class Client extends Application {
         }
     } // end of Timer for items
 
+    /*
+     * setUserName sets the userName for this Client
+     */
     public static void setUserName(String name) {
         userName = name;
     }
@@ -63,7 +66,6 @@ public class Client extends Application {
             toServer.flush();
         } catch (IOException e) {
         }
-        //toServer.close();
     } // end of sendTOServer
 
     /*
@@ -73,6 +75,9 @@ public class Client extends Application {
         sock.close();
     }
 
+    /*
+     * closes the socket and exits the program gracefully
+     */
     public static void exit() throws IOException{
         sock.close();
         Platform.exit();
@@ -81,10 +86,7 @@ public class Client extends Application {
 
     @Override
     public void start(Stage stage) throws Exception{
-
-
         setUpNetworking();
-
         FXMLLoader l = new FXMLLoader();
         Parent root = l.load(getClass().getResource("ClientLogin.fxml").openStream());
         controller1 = l.getController();
@@ -92,15 +94,10 @@ public class Client extends Application {
         stage.setScene(scene);
         stage.show();
 
-
-
         FXMLLoader l2 = new FXMLLoader();
         Parent root2 = l2.load(getClass().getResource("ClientBidding.fxml").openStream());
         controller2 = l2.getController();
         scene2 = new Scene(root2);
-
-
-
     }
 
     private void setUpNetworking(){
@@ -165,8 +162,7 @@ public class Client extends Application {
                 }
             }catch(ClassNotFoundException ex){
                 System.out.println("cant find");
-            }
-            catch(SocketException ex){
+            }catch(SocketException ex){
                 System.out.println("socket closed");
             }catch (IOException ex) {
                 System.out.println("server closed");
@@ -176,8 +172,6 @@ public class Client extends Application {
                     e.printStackTrace();
                 }
             }
-
-
         }
     }
 
@@ -186,6 +180,5 @@ public class Client extends Application {
         Timer t = new Timer();
         t.schedule(itemTimer,5000,1000);
         launch(args);
-
     }
 }
